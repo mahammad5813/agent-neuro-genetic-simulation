@@ -1,5 +1,4 @@
 import pygame as pg
-import pyautogui as pgui
 import random
 import math
 import numpy as np
@@ -8,12 +7,12 @@ from copy import copy, deepcopy
 from nn_funcs import select_parent, crossover
 import time
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800, 800
 AGENT_SIZE = 20
 GRAVITY = 0
 tick_rate = 60
 tick_limit = 200
-
+vel_limit = 10
 nn_shape = (6,100,50,2)
 n_gens = 100
 n_agents = 1000
@@ -74,11 +73,11 @@ class Agent:
         if self.dead:
             return
         
-        inputs = [self.pos_x, self.pos_y, self.vel_x, self.vel_y, self.target[0], self.target[1]]
+        inputs = [self.pos_x/800, self.pos_y/800, self.vel_x/10, self.vel_y/10, self.target[0]/800, self.target[1]/800]
 
 
         vec = self.nn.evaluate(np.array(inputs))
-        vec/=200
+        vec*=10
 
         self.pos_x += vec[0]
         self.pos_y += vec[1]
@@ -95,10 +94,20 @@ class Agent:
         
         self.pos_x += self.vel_x
         self.pos_y += self.vel_y
+
         if self.vel_x:
             self.vel_x -= abs(self.vel_x)/self.vel_x*0.02
+
         if self.vel_y:
             self.vel_y -= abs(self.vel_y)/self.vel_y*0.02
+
+        cur_vel = math.sqrt(self.vel_x**2+self.vel_y**2)
+
+        if cur_vel > vel_limit:
+            scale = vel_limit/cur_vel
+            self.x_vel*=scale
+            self.y_vel*=scale
+
         self.check_collision()
         self.vel_y += GRAVITY
         self.check_score()
@@ -137,6 +146,7 @@ for gen_i in range(n_gens):
 
         targets.append(rand_pos)
         target_colors.append(rand_color)
+
     random.shuffle(population)
 
 
