@@ -20,7 +20,7 @@ def tanh(x):
     return np.tanh(x)
 
 def leaky_relu(x):
-    return np.maximum(0.1*x, x)
+    return np.maximum(0.01*x, x)
 
 if __name__ == "__main__":
     x = np.arange(-10,10,0.1)
