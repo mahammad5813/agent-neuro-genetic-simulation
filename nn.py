@@ -10,7 +10,8 @@ class NN():
         shape = (n_layer1, n_layer2 ... n_layern)
         """
         if not weights and not biases:
-            self.weights = [np.random.uniform(-1,1,(shape[i-1], shape[i])) for i in range(1,len(shape))]
+            # self.weights = [np.random.uniform(-1,1,(shape[i-1], shape[i])) for i in range(1,len(shape))]
+            self.weights = [np.random.randn(shape[i-1], shape[i]) * np.sqrt(2/shape[i-1]) for i in range(1, len(shape))]
             self.biases = [np.random.uniform(-1,1,(shape[i])) for i in range(1, len(shape))]
         else:
             self.weights = weights
@@ -33,7 +34,7 @@ class NN():
         for i in range(len(self.weights)):
             inputs = np.dot(inputs, self.weights[i])+self.biases[i]
             if i < len(self.weights)-1:
-                inputs = relu(inputs)
+                inputs = leaky_relu(inputs)
             # else:
             #     inputs = tanh(inputs)
 
