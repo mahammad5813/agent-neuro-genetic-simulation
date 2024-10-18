@@ -9,17 +9,22 @@ class NN():
         """
         shape = (n_layer1, n_layer2 ... n_layern)
         """
+
         if not weights and not biases:
             # self.weights = [np.random.uniform(-1,1,(shape[i-1], shape[i])) for i in range(1,len(shape))]
-            self.weights = [np.random.randn(shape[i-1], shape[i]) * np.sqrt(2/shape[i-1]) for i in range(1, len(shape))]
+            self.weights = [np.random.randn(shape[i-1], shape[i])*np.sqrt(2/shape[i-1]) for i in range(1,len(shape))]# "He" weight initialization
+
             self.biases = [np.random.uniform(-1,1,(shape[i])) for i in range(1, len(shape))]
+            
         else:
+
             self.weights = weights
             self.biases = biases
 
         self.score = 0
         self.shape = shape
         self.size = cal_size(self)
+
 
     def mutate(self):
 
@@ -28,6 +33,7 @@ class NN():
 
         for i,b_layer in enumerate(self.biases):
             self.biases[i] = array_tweak(b_layer)
+
 
     def evaluate(self, inputs):
 
@@ -39,6 +45,7 @@ class NN():
             #     inputs = tanh(inputs)
 
         return inputs
+    
 
     def evaluate_bunch(self, bunch_inputs):
         
