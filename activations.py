@@ -1,9 +1,9 @@
 import numpy as np
-import math
-import matplotlib.pyplot as plt
 
 def relu(x):
+
     return np.maximum(0,x)
+
 
 def elu(x):
     if x > 0 :
@@ -23,7 +23,4 @@ def leaky_relu(x):
     return np.maximum(0.01*x, x)
 
 if __name__ == "__main__":
-    x = np.arange(-10,10,0.1)
-    y = [leaky_relu(i) for i in x]
-    plt.plot(x,y)
-    plt.show()
+    pass
