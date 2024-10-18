@@ -1,36 +1,55 @@
 import numpy as np
 import random
-from copy import deepcopy
 
-mut_rate = 0.01
+
+par_mut_rate = 0.005
 
 def tweak(x):
 
-    if random.uniform(0,1) < mut_rate:
-        rand = random.uniform(-0.5,0.5)
+    if random.uniform(0,1) < par_mut_rate:
+
+        rand = random.uniform(-1,1)
         res = x+x*rand
 
         return res
     
     return x
 
-
 array_tweak = np.vectorize(tweak)
+
+
 
 def select_parent(pop):
 
-    rand_num = random.uniform(0,1)
+    rand_num = random.uniform(0,sum([x.score for x in pop]))
     running_sum = 0
 
-    for nn in pop:
-        running_sum+=nn.score
+    for agent in pop:
+        running_sum+=agent.score
 
         if running_sum>rand_num:
-            return deepcopy(nn)
+            return agent.nn
+
+
+
+def select_parents(pop):
+    parent_0 = select_parent(pop)
+    parent_1 = select_parent(pop)
+
+    for _ in range(100):
+
+        if parent_0 != parent_1:
+
+            return (parent_0, parent_1)
+        
+        parent_1 = select_parent(pop)
+
+
+    return (parent_0, parent_1)
+
+
 
 def crossover(parent0, parent1):
-    parent0 = parent0.nn
-    parent1 = parent1.nn
 
     size = 0
     p_shape = parent0.shape
@@ -112,6 +131,13 @@ def cal_size(nn):
         out += np.sum(weights)
     
     return out
+
+def normalize(x, min, max):
+    return (x - min)/(max-min)
+
+def denormalize(x, min, max):
+    return x * (max - min) + min
+
 
 
 
